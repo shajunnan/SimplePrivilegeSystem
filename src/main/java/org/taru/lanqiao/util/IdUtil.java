@@ -60,6 +60,7 @@ public class IdUtil {
     public static void main(String[] args) {
         System.out.println(IdUtil.getDateId());
         System.out.println(IdUtil.getLongTimeId());
+        System.out.println(IdUtil.getUuid());
     }
 
 }
