@@ -16,6 +16,8 @@
     <mvc:annotation-driven />
     <!-- spring扫描的包，告诉我你的controller在哪个包中 -->
     <context:component-scan base-package="org.taru.lanqiao.api" />
+    <!-- 配置文件application.properties加载入IOC容器 -->
+    <context:property-placeholder ignore-unresolvable="true" location="classpath*:/application.properties" />
 
     <!-- 支持上传文件 -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
