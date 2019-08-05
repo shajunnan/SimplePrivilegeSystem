@@ -29,7 +29,8 @@ public class CoreServlet {
 
     /**
      * 查询用户菜单
-     * @author
+     * @author ShaJunnan
+     * @param userId
      * @return
      */
     @RequestMapping("/api/user/query/menu")
@@ -52,9 +53,11 @@ public class CoreServlet {
         return result;
     }
 
+
     /**
      * 查询用户权限
-     * @author
+     * @author ShaJunnan
+     * @param userId
      * @return
      */
     @RequestMapping("/api/user/query/priv")
