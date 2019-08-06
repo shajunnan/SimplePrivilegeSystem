@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * 加密工具类
  */
-public class SecretUtil {
+public class Security {
     /**
      * MD5加密 32位
      * @author XueKe
