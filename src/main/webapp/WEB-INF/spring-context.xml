@@ -25,4 +25,16 @@
         <property name="maxUploadSize" value="10485760000"></property>
         <property name="maxInMemorySize" value="40960"></property>
     </bean>
+
+
+    <!-- 拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!-- 拦截的请求 -->
+            <mvc:mapping path="/**"/>
+            <!-- 不拦截某个请求 -->
+           <!-- <mvc:exclude-mapping path=""/> -->
+            <bean class="org.taru.lanqiao.intercepter.PrivilegeIntercepter"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>
