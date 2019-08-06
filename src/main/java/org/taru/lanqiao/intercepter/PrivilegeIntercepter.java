@@ -2,11 +2,17 @@ package org.taru.lanqiao.intercepter;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import org.taru.lanqiao.dao.CoreDaoImpl;
+import org.taru.lanqiao.dao.UserDaoImpl;
+import org.taru.lanqiao.entity.Privilege;
+import org.taru.lanqiao.entity.User;
 import org.taru.lanqiao.util.JsonWriter;
 import org.taru.lanqiao.vo.JsonResult;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 public class PrivilegeIntercepter implements HandlerInterceptor {
     /**
@@ -19,19 +25,36 @@ public class PrivilegeIntercepter implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 获取URI
         String uri = request.getRequestURI();
-        System.out.println("uri = " + uri);
-        // uri = uri.substring(uri.indexOf("/",1));
         // 1.获取用户
-        // 2.查询用户权限
-        // 3.判断当前用户是否有当前权限
-        if(true){
-            return true;
-        }else{
-            JsonResult result = new JsonResult("500","未授权，无访问权限",null);
-            JsonWriter.writer(response,result);
-            return false;
+        String uid = null;
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null && cookies.length > 0) {
+            for(Cookie ck : cookies) {
+                if(ck.getName().equals("uid")) {
+                    uid = ck.getValue();
+                }
+            }
         }
+        // 2.查询用户权限
+        UserDaoImpl impl = new UserDaoImpl();
+        User user = impl.findById(uid);
+
+        // 3.判断当前用户是否有当前权限
+        CoreDaoImpl implCore = new CoreDaoImpl();
+        List<Privilege> privList = implCore.queryUserPriv(uid);
+        if(privList != null && privList.size() > 0) {
+            for (Privilege priv : privList) {
+                if (priv.getPrivUrl().equals(uri)) {
+                    return true;    // 放行
+                }
+            }
+        }
+
+        JsonResult result = new JsonResult("500","未授权，无访问权限",null);
+        JsonWriter.writer(response,result);
+        return false;
     }
 
 
