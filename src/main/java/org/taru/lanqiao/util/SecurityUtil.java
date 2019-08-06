@@ -6,14 +6,14 @@ import java.security.NoSuchAlgorithmException;
 /**
  * 加密工具类
  */
-public class Security {
+public class SecurityUtil {
     /**
      * MD5加密 32位
      * @author XueKe
      * @param source
      * @return
      */
-    public static String encryption(String source) {
+    public static String encryptionMd5(String source) {
         StringBuffer sb = new StringBuffer();
         try {
             // 加密对象，指定加密方式
