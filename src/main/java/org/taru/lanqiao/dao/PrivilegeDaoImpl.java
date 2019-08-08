@@ -3,8 +3,10 @@ package org.taru.lanqiao.dao;
 import org.taru.lanqiao.entity.Privilege;
 import org.taru.lanqiao.util.DbUtil;
 import org.taru.lanqiao.util.StringUtil;
+import org.taru.lanqiao.vo.PageResult;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -75,5 +77,52 @@ public class PrivilegeDaoImpl {
         String sql = "update privs set priv_name=?,priv_father_id=?,priv_describe=?,priv_url=?,priv_status= ? where priv_id=?";
         int num  = DbUtil.update(sql, privName, privFid, privDescribe, privUrl, privStatus, privid);
         return num;
+    }
+
+
+    /**
+     * 查询权限列表
+     * @author ShaJunnan
+     * @return
+     */
+    public PageResult queryList(int pageNum, int pageSize){
+        // limit 偏移，查询条数
+        String sql = "select * from privs limit ?,?";
+        List<Map<String,Object>> dataList = DbUtil.query(sql,(pageNum-1)*pageSize,pageSize);
+
+        // 1、设置列表数据
+        List<Object> objList = new ArrayList<Object>();
+        if(dataList != null && dataList.size() > 0){
+            for(Map<String,Object> map:dataList){
+                Privilege priv = new Privilege();
+                priv.setPrivId(StringUtil.valueOf(map.get("priv_id")));
+                priv.setPrivName(StringUtil.valueOf(map.get("priv_menu")));
+                priv.setPrivUrl(StringUtil.valueOf(map.get("priv_url")));
+                priv.setPrivDescribe(StringUtil.valueOf(map.get("priv_describe")));
+                priv.setPrivFatherId(StringUtil.valueOf(map.get("priv_father_id")));
+                priv.setPrivStatus(StringUtil.valueOf(map.get("priv_status")));
+
+                objList.add(priv);
+            }
+        }
+
+        // 2、查询总商品数据条数
+        String sql2 = "select count(*) as row_count from privs";
+        List<Map<String, Object>> countList = DbUtil.query(sql2);
+        int total = Integer.parseInt(StringUtil.valueOf(countList.get(0).get("row_count")));
+        int pages = (int) Math.ceil(total * 1.0 / pageSize); // 向上取整为总页数,pageSize为0时的情况需特殊处理
+
+
+        // 3、装入PageResult对象
+        PageResult pageResult = new PageResult();
+        pageResult.setList(objList);
+        pageResult.setPageNum(pageNum);
+        pageResult.setPageSize(pageSize);
+        pageResult.setTotal(total);
+        pageResult.setPages(pages);
+
+        // 关闭数据库连接
+        DbUtil.close();
+        return pageResult;
     }
 }

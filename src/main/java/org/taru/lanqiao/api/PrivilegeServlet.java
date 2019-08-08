@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.taru.lanqiao.dao.PrivilegeDaoImpl;
 import org.taru.lanqiao.entity.Privilege;
 import org.taru.lanqiao.vo.JsonResult;
+import org.taru.lanqiao.vo.PageResult;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 权限相关
@@ -119,6 +122,40 @@ public class PrivilegeServlet {
             e.printStackTrace();
             result = new JsonResult("500", "修改异常 ", null);
         }
+        return result;
+    }
+
+
+    /**
+     * 查询权限列表
+     * @author ShaJunnans
+     * @return
+     */
+    @RequestMapping("/api/priv/list")
+    public JsonResult queryList(HttpServletRequest request) {
+        JsonResult result = null;
+        int pageNum = 1;
+        int pageSize = 10;
+        if(request.getParameter("pageNum") != null){
+            pageNum = Integer.parseInt(request.getParameter("pageNum"));
+        }
+        if(request.getParameter("pageSize") != null){
+            pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        }
+
+        try {
+            PrivilegeDaoImpl impl = new PrivilegeDaoImpl();
+            PageResult pageResult = impl.queryList(pageNum,pageSize);
+            if(pageResult != null){
+                result = new JsonResult("200", "查询权限列表成功", pageResult);
+            }else{
+                result = new JsonResult("404", "查询权限列表失败", null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new JsonResult("500", "查询权限列表异常", null);
+        }
+
         return result;
     }
 }
