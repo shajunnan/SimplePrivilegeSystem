@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.taru.lanqiao.dao.MenuDaoImpl;
 import org.taru.lanqiao.vo.JsonResult;
+import org.taru.lanqiao.vo.PageResult;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -136,6 +138,40 @@ public class MenuServlet {
         } catch (Exception exp) {
             result = new JsonResult("500", "系统错误", exp.getMessage());
         }
+        return result;
+    }
+
+
+    /**
+     * 查询菜单列表
+     * @author ShaJunnans
+     * @return
+     */
+    @RequestMapping("/api/menu/list")
+    public JsonResult queryList(HttpServletRequest request) {
+        JsonResult result = null;
+        int pageNum = 1;
+        int pageSize = 10;
+        if(request.getParameter("pageNum") != null){
+            pageNum = Integer.parseInt(request.getParameter("pageNum"));
+        }
+        if(request.getParameter("pageSize") != null){
+            pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        }
+
+        try {
+            MenuDaoImpl impl = new MenuDaoImpl();
+            PageResult pageResult = impl.queryList(pageNum,pageSize);
+            if(pageResult != null){
+                result = new JsonResult("200", "查询菜单列表成功", pageResult);
+            }else{
+                result = new JsonResult("404", "查询菜单列表失败", null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new JsonResult("500", "查询菜单列表异常", null);
+        }
+
         return result;
     }
 
