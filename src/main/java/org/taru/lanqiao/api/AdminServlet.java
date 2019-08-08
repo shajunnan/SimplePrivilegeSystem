@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.taru.lanqiao.dao.AdminDaoImpl;
 import org.taru.lanqiao.entity.Admin;
 import org.taru.lanqiao.vo.JsonResult;
+import org.taru.lanqiao.vo.PageResult;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -46,19 +48,28 @@ public class AdminServlet {
      * @return
      */
     @RequestMapping("/admin/list")
-    public JsonResult queryList(){
+    public JsonResult queryList(HttpServletRequest request) {
         JsonResult result = null;
+        int pageNum = 1;
+        int pageSize = 10;
+        if(request.getParameter("pageNum") != null){
+            pageNum = Integer.parseInt(request.getParameter("pageNum"));
+        }
+        if(request.getParameter("pageSize") != null){
+            pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        }
 
         try {
             AdminDaoImpl impl = new AdminDaoImpl();
-            List<Admin> adminList = impl.queryList();
-            if(adminList != null && adminList.size() > 0){
-                result = new JsonResult("200","查询管理员列表成功",adminList);
-            }else {
-                result = new JsonResult("404","查询管理员列表失败",null);
+            PageResult pageResult = impl.queryList(pageNum,pageSize);
+            if(pageResult != null){
+                result = new JsonResult("200", "查询管理员列表成功", pageResult);
+            }else{
+                result = new JsonResult("404", "查询管理员列表失败", null);
             }
         }catch (Exception e){
-            result = new JsonResult("500","查询管理员列表异常",null);
+            e.printStackTrace();
+            result = new JsonResult("500", "系统异常", null);
         }
 
         return result;
