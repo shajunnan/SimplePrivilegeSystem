@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.taru.lanqiao.dao.RoleDaoImpl;
 import org.taru.lanqiao.entity.Role;
 import org.taru.lanqiao.vo.JsonResult;
+import org.taru.lanqiao.vo.PageResult;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 角色相关
@@ -132,6 +135,40 @@ public class RoleServlet {
         }catch (Exception e) {
             e.printStackTrace();
             result = new JsonResult("500","修改角色异常",null);
+        }
+
+        return result;
+    }
+
+
+    /**
+     * 查询角色列表
+     * @author ShaJunnans
+     * @return
+     */
+    @RequestMapping("/api/role/list")
+    public JsonResult queryList(HttpServletRequest request) {
+        JsonResult result = null;
+        int pageNum = 1;
+        int pageSize = 10;
+        if(request.getParameter("pageNum") != null){
+            pageNum = Integer.parseInt(request.getParameter("pageNum"));
+        }
+        if(request.getParameter("pageSize") != null){
+            pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        }
+
+        try {
+            RoleDaoImpl impl = new RoleDaoImpl();
+            PageResult pageResult = impl.queryList(pageNum,pageSize);
+            if(pageResult != null){
+                result = new JsonResult("200", "查询角色列表成功", pageResult);
+            }else{
+                result = new JsonResult("404", "查询角色列表失败", null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new JsonResult("500", "查询角色列表异常", null);
         }
 
         return result;
