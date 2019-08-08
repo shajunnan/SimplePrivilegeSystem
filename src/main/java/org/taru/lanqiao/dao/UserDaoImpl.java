@@ -3,7 +3,9 @@ package org.taru.lanqiao.dao;
 import org.taru.lanqiao.entity.User;
 import org.taru.lanqiao.util.DbUtil;
 import org.taru.lanqiao.util.StringUtil;
+import org.taru.lanqiao.vo.PageResult;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -97,10 +99,9 @@ public class UserDaoImpl {
 
     /**
      * 根据id查询用户详情
-     *
+     * @author XueKe
      * @param userId
      * @return
-     * @author XK
      */
     public User findById(String userId) {
         User user = null;
@@ -112,6 +113,7 @@ public class UserDaoImpl {
                 user = new User();
                 user.setUserId(StringUtil.valueOf(list.get(0).get("user_id")));
                 user.setUserName(StringUtil.valueOf(list.get(0).get("user_name")));
+                user.setUserPassword(StringUtil.valueOf(list.get(0).get("user_password")));
                 user.setUserTelephone(StringUtil.valueOf(list.get(0).get("user_telephone")));
                 user.setUserPhoto(StringUtil.valueOf(list.get(0).get("user_photo")));
                 user.setUserComment(StringUtil.valueOf(list.get(0).get("user_comment")));
@@ -121,5 +123,53 @@ public class UserDaoImpl {
             user = null;
         }
         return user;
+    }
+
+
+    /**
+     * 查询用户列表
+     * @author ShaJunnan
+     * @return
+     */
+    public PageResult queryList(int pageNum,int pageSize){
+        // limit 偏移，查询条数
+        String sql = "select * from users limit ?,?";
+        List<Map<String,Object>> dataList = DbUtil.query(sql,(pageNum-1)*pageSize,pageSize);
+
+        // 1、设置列表数据
+        List<Object> objList = new ArrayList<Object>();
+        if(dataList != null && dataList.size() > 0){
+            for(Map<String,Object> map:dataList){
+                User user = new User();
+                user.setUserId(StringUtil.valueOf(map.get("user_id")));
+                user.setUserName(StringUtil.valueOf(map.get("user_name")));
+                user.setUserPassword(StringUtil.valueOf(map.get("user_password")));
+                user.setUserTelephone(StringUtil.valueOf(map.get("user_telephone")));
+                user.setUserPhoto(StringUtil.valueOf(map.get("user_photo")));
+                user.setUserComment(StringUtil.valueOf(map.get("user_comment")));
+                user.setUserStatus(StringUtil.valueOf(map.get("user_status")));
+
+                objList.add(user);
+            }
+        }
+
+        // 2、查询总商品数据条数
+        String sql2 = "select count(*) as row_count from users";
+        List<Map<String, Object>> countList = DbUtil.query(sql2);
+        int total = Integer.parseInt(StringUtil.valueOf(countList.get(0).get("row_count")));
+        int pages = (int) Math.ceil(total * 1.0 / pageSize); // 向上取整为总页数,pageSize为0时的情况需特殊处理
+
+
+        // 3、装入PageResult对象
+        PageResult pageResult = new PageResult();
+        pageResult.setList(objList);
+        pageResult.setPageNum(pageNum);
+        pageResult.setPageSize(pageSize);
+        pageResult.setTotal(total);
+        pageResult.setPages(pages);
+
+        // 关闭数据库连接
+        DbUtil.close();
+        return pageResult;
     }
 }

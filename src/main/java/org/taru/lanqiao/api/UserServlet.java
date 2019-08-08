@@ -1,14 +1,17 @@
 package org.taru.lanqiao.api;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.taru.lanqiao.dao.UserDaoImpl;
 import org.taru.lanqiao.entity.User;
 import org.taru.lanqiao.util.IdUtil;
 import org.taru.lanqiao.util.SecurityUtil;
 import org.taru.lanqiao.vo.JsonResult;
+import org.taru.lanqiao.vo.PageResult;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -163,6 +166,40 @@ public class UserServlet {
         } else {
             result = new JsonResult("200", "查询用户成功", user);
         }
+        return result;
+    }
+
+
+    /**
+     * 查询用户列表
+     * @author ShaJunnans
+     * @return
+     */
+    @RequestMapping("/api/user/list")
+    public JsonResult queryList(HttpServletRequest request) {
+        JsonResult result = null;
+        int pageNum = 1;
+        int pageSize = 10;
+        if(request.getParameter("pageNum") != null){
+            pageNum = Integer.parseInt(request.getParameter("pageNum"));
+        }
+        if(request.getParameter("pageSize") != null){
+            pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        }
+
+        try {
+            UserDaoImpl impl = new UserDaoImpl();
+            PageResult pageResult = impl.queryList(pageNum,pageSize);
+            if(pageResult != null){
+                result = new JsonResult("200", "查询用户列表成功", pageResult);
+            }else{
+                result = new JsonResult("404", "查询用户列表失败", null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new JsonResult("500", "查询用户列表异常", null);
+        }
+
         return result;
     }
 
