@@ -45,6 +45,12 @@ public class PrivilegeDaoImpl {
         String privDescribe = priv.getPrivDescribe();
         String privUrl = priv.getPrivUrl();
         String privStatus = priv.getPrivStatus();
+
+        // 处理MySQL非char插入空值的问题
+        if("".equals(privFid)){
+            privFid = null;
+        }
+
         String sql = "insert into privs  (priv_name ,priv_father_id,priv_describe,priv_url,priv_status)  VALUES(?,?,?,?,?) ";
         int num = DbUtil.update(sql, privName, privFid, privDescribe, privUrl, privStatus);
         return num;
@@ -74,6 +80,12 @@ public class PrivilegeDaoImpl {
         String privUrl = priv.getPrivUrl();
         String privStatus = priv.getPrivStatus();
         String privid = priv.getPrivId();
+
+        // 处理MySQL非char插入空值的问题
+        if("".equals(privFid)){
+            privFid = null;
+        }
+
         String sql = "update privs set priv_name=?,priv_father_id=?,priv_describe=?,priv_url=?,priv_status= ? where priv_id=?";
         int num  = DbUtil.update(sql, privName, privFid, privDescribe, privUrl, privStatus, privid);
         return num;
@@ -96,7 +108,7 @@ public class PrivilegeDaoImpl {
             for(Map<String,Object> map:dataList){
                 Privilege priv = new Privilege();
                 priv.setPrivId(StringUtil.valueOf(map.get("priv_id")));
-                priv.setPrivName(StringUtil.valueOf(map.get("priv_menu")));
+                priv.setPrivName(StringUtil.valueOf(map.get("priv_name")));
                 priv.setPrivUrl(StringUtil.valueOf(map.get("priv_url")));
                 priv.setPrivDescribe(StringUtil.valueOf(map.get("priv_describe")));
                 priv.setPrivFatherId(StringUtil.valueOf(map.get("priv_father_id")));

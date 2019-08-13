@@ -28,13 +28,13 @@
 
 
     <!-- 拦截器 -->
-    <mvc:interceptors>
+    <!--<mvc:interceptors>
         <mvc:interceptor>
-            <!-- 拦截的请求 -->
+            &lt;!&ndash; 拦截的请求 &ndash;&gt;
             <mvc:mapping path="/**"/>
-            <!-- 不拦截某个请求 -->
+            &lt;!&ndash; 不拦截某个请求 &ndash;&gt;
             <mvc:exclude-mapping path="/api/user/login"/>
             <bean class="org.taru.lanqiao.intercepter.PrivilegeIntercepter"/>
         </mvc:interceptor>
-    </mvc:interceptors>
+    </mvc:interceptors>-->
 </beans>

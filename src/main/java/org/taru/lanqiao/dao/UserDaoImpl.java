@@ -33,6 +33,7 @@ public class UserDaoImpl {
                 user.setUserId(StringUtil.valueOf(list.get(0).get("user_id")));
                 user.setUserName(StringUtil.valueOf(list.get(0).get("user_name")));
                 user.setUserTelephone(StringUtil.valueOf(list.get(0).get("user_telephone")));
+                user.setUserTelephone(StringUtil.valueOf(list.get(0).get("user_address")));
                 user.setUserPhoto(StringUtil.valueOf(list.get(0).get("user_photo")));
                 user.setUserComment(StringUtil.valueOf(list.get(0).get("user_comment")));
                 user.setUserStatus(StringUtil.valueOf(list.get(0).get("user_status")));
@@ -52,9 +53,11 @@ public class UserDaoImpl {
      */
     public int regist(User user) {
         int num = 0;
-        String sql = "INSERT INTO users (user_id,user_name,user_password,user_telephone,user_photo,user_address,user_comment) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO users (user_id,user_name,user_password,user_telephone,user_photo,user_address,user_comment,user_status) VALUES (?,?,?,?,?,?,?,?)";
         try {
-            num = DbUtil.update(sql, user.getUserId(), user.getUserName(), user.getUserPassword(), user.getUserTelephone(), user.getUserPhoto(), user.getUserAddress(), user.getUserComment());
+            num = DbUtil.update(sql, user.getUserId(), user.getUserName(),
+                    user.getUserPassword(), user.getUserTelephone(), user.getUserPhoto(),
+                    user.getUserAddress(), user.getUserComment(),user.getUserStatus());
         } catch (Exception ex) {
             num = -1;
         }
@@ -88,9 +91,9 @@ public class UserDaoImpl {
      */
     public int update(User user) {
         int num = 0;
-        String sql = "update users set user_name=?,user_password=?,user_telephone=?,user_photo=?,user_address=?,user_comment=? where user_id=?";
+        String sql = "update users set user_name=?,user_password=?,user_telephone=?,user_photo=?,user_address=?,user_comment=?,user_status=? where user_id=?";
         try {
-            num = DbUtil.update(sql, user.getUserName(), user.getUserPassword(), user.getUserTelephone(), user.getUserPhoto(), user.getUserAddress(), user.getUserComment(), user.getUserId());
+            num = DbUtil.update(sql, user.getUserName(), user.getUserPassword(), user.getUserTelephone(), user.getUserPhoto(), user.getUserAddress(), user.getUserComment(),user.getUserStatus(),user.getUserId());
         } catch (Exception ex) {
             num = 0;
         }
@@ -115,6 +118,7 @@ public class UserDaoImpl {
                 user.setUserName(StringUtil.valueOf(list.get(0).get("user_name")));
                 user.setUserPassword(StringUtil.valueOf(list.get(0).get("user_password")));
                 user.setUserTelephone(StringUtil.valueOf(list.get(0).get("user_telephone")));
+                user.setUserTelephone(StringUtil.valueOf(list.get(0).get("user_address")));
                 user.setUserPhoto(StringUtil.valueOf(list.get(0).get("user_photo")));
                 user.setUserComment(StringUtil.valueOf(list.get(0).get("user_comment")));
                 user.setUserStatus(StringUtil.valueOf(list.get(0).get("user_status")));
@@ -145,6 +149,7 @@ public class UserDaoImpl {
                 user.setUserName(StringUtil.valueOf(map.get("user_name")));
                 user.setUserPassword(StringUtil.valueOf(map.get("user_password")));
                 user.setUserTelephone(StringUtil.valueOf(map.get("user_telephone")));
+                user.setUserTelephone(StringUtil.valueOf(map.get("user_address")));
                 user.setUserPhoto(StringUtil.valueOf(map.get("user_photo")));
                 user.setUserComment(StringUtil.valueOf(map.get("user_comment")));
                 user.setUserStatus(StringUtil.valueOf(map.get("user_status")));

@@ -47,6 +47,17 @@ public class MenuDaoImpl {
                    String menuDescribe,
                    String menuUrl,
                    String menuStatus) {
+        // 处理MySQL非char插入空值的问题
+        if("".equals(menuLevel)){
+            menuLevel = null;
+        }
+        if("".equals(menuSequence)){
+            menuSequence = null;
+        }
+        if("".equals(menuFatherId)){
+            menuFatherId = null;
+        }
+
         int num = 0;
         String sql = "insert into menus(menu_name,menu_level,menu_sequence,menu_father_id,menu_describe,menu_url,menu_status) values(?,?,?,?,?,?,?)";
         num = DbUtil.update(sql, menuName, menuLevel, menuSequence, menuFatherId, menuDescribe, menuUrl, menuStatus);
@@ -89,6 +100,17 @@ public class MenuDaoImpl {
                       String menuUrl,
                       String menuStatus,
                       String menuId) {
+        // 处理MySQL非char插入空值的问题
+        if("".equals(menuLevel)){
+            menuLevel = null;
+        }
+        if("".equals(menuSequence)){
+            menuSequence = null;
+        }
+        if("".equals(menuFatherId)){
+            menuFatherId = null;
+        }
+
         int row = 0;
         String sql = "update menus set menu_name=?,menu_level=?,menu_sequence=?,menu_father_id=?,menu_describe=?,menu_url=?,menu_status=? where menu_id=?";
         row = DbUtil.update(sql, menuName, menuLevel, menuSequence, menuFatherId, menuDescribe, menuUrl, menuStatus, menuId);

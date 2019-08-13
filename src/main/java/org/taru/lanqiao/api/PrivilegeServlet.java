@@ -1,5 +1,6 @@
 package org.taru.lanqiao.api;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 权限相关
  */
+@CrossOrigin(origins = "*", maxAge = 3600)  // 开启跨域
 @RestController
 public class PrivilegeServlet {
     /**
@@ -46,7 +48,11 @@ public class PrivilegeServlet {
      * @author XieHeng
      */
     @RequestMapping("/api/priv/add")
-    public JsonResult add(@RequestParam("privName") String privName, @RequestParam("privFatherId") String privFid, @RequestParam("privDescribe") String privDescribe, @RequestParam("privUrl") String privUrl, @RequestParam("privStatus") String privStatus) {
+    public JsonResult add(@RequestParam("privName") String privName,
+                          @RequestParam("privFatherId") String privFid,
+                          @RequestParam("privDescribe") String privDescribe,
+                          @RequestParam("privUrl") String privUrl,
+                          @RequestParam("privStatus") String privStatus) {
         JsonResult result = null;
         try {
             Privilege priv = new Privilege();

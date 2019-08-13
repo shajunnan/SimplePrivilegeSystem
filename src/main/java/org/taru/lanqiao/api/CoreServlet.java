@@ -1,6 +1,7 @@
 package org.taru.lanqiao.api;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ import java.util.List;
  * 核心-交互 部分
  * 此处代码考虑移动分散至其他类中
  */
+@CrossOrigin(origins = "*", maxAge = 3600)  // 开启跨域
 @RestController
 public class CoreServlet {
     /**

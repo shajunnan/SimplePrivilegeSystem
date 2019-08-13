@@ -1,5 +1,6 @@
 package org.taru.lanqiao.api;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 角色相关
  */
+@CrossOrigin(origins = "*", maxAge = 3600)  // 开启跨域
 @RestController
 public class RoleServlet {
     /**

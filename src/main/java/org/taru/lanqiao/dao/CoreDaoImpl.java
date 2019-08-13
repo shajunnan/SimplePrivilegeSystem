@@ -25,7 +25,7 @@ public class CoreDaoImpl {
         sqlBuffer.append("LEFT JOIN roles c ON b.rm_role_id = c.role_id ");
         sqlBuffer.append("LEFT JOIN role_user d ON c.role_id = d.ru_role_id ");
         sqlBuffer.append("LEFT JOIN users e ON d.ru_user_id = e.user_id ");
-        sqlBuffer.append("WHERE e.user_id = ?");
+        sqlBuffer.append("WHERE e.user_id = ? and a.menu_status = 1");
         String sql = sqlBuffer.toString();
 
         List<Map<String,Object>> dataList = DbUtil.query(sql,userId);

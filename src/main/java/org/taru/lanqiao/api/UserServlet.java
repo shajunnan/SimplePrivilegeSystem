@@ -1,5 +1,6 @@
 package org.taru.lanqiao.api;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpSession;
 /**
  * 用户相关
  */
+@CrossOrigin(origins = "*", maxAge = 3600)  // 开启跨域
 @RestController
 public class UserServlet {
     /**
@@ -83,12 +85,48 @@ public class UserServlet {
         user.setUserPhoto(userPhoto);
         user.setUserAddress(userAddress);
         user.setUserComment(userComment);
+        user.setUserStatus("1");
         UserDaoImpl impl = new UserDaoImpl();
         int i = impl.regist(user);
-        if (i == 0) {
-            result = new JsonResult("404", "注册失败", "");
-        } else {
+        if (i > 0) {
             result = new JsonResult("200", "注册成功", "");
+        } else {
+            result = new JsonResult("404", "注册失败", "");
+        }
+        return result;
+    }
+
+    /**
+     * 添加用户
+     * @author XueKe
+     * @param userName
+     * @param userPassword
+     * @param userTelephone
+     * @param userPhoto
+     * @param userAddress
+     * @param userComment
+     * @return
+     */
+    @RequestMapping("/api/user/add")
+    public JsonResult add(String userName, String userPassword,
+                             String userTelephone, String userPhoto,
+                             String userAddress, String userComment,String userStatus) {
+        JsonResult result = null;
+        User user = new User();
+        user.setUserId(IdUtil.getUuid());
+        user.setUserName(userName);
+        user.setUserPassword(userPassword);
+        user.setUserTelephone(userTelephone);
+        user.setUserPhoto(userPhoto);
+        user.setUserAddress(userAddress);
+        user.setUserComment(userComment);
+        user.setUserStatus(userStatus);
+        UserDaoImpl impl = new UserDaoImpl();
+        int i = impl.regist(user);
+        if (i > 0) {
+            result = new JsonResult("200", "注册成功", "");
+        } else {
+            result = new JsonResult("404", "注册失败", "");
         }
         return result;
     }
@@ -128,7 +166,7 @@ public class UserServlet {
      */
     @RequestMapping("/api/user/update")
     public JsonResult update(String userId, String userName, String userPassword,
-                             String userTelephone, String userPhoto, String userAddress, String userComment) {
+                             String userTelephone, String userPhoto, String userAddress, String userComment,String userStatus) {
         JsonResult result = null;
         User user = new User();
         UserDaoImpl impl = new UserDaoImpl();
@@ -139,6 +177,7 @@ public class UserServlet {
         user.setUserPhoto(userPhoto);
         user.setUserAddress(userAddress);
         user.setUserComment(userComment);
+        user.setUserStatus(userStatus);
         int i = impl.update(user);
         if (i == 0) {
             result = new JsonResult("404", "修改失败", "");
